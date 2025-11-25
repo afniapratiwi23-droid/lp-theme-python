@@ -448,6 +448,9 @@ class ThemeRenderer:
         if data.get('image'):
             image_html = f'<img src="{data["image"]}" class="{theme["image"]}" alt="Product Image">'
 
+        # Fix for f-string backslash issue
+        story_text = data.get('story', '').replace('\n', '<br>')
+
         price_html = ""
         if data.get('priceDiscount'):
             price_html = f"""
@@ -480,7 +483,7 @@ class ThemeRenderer:
                 {image_html}
                 
                 <div class="{theme['storyBox']}">
-                    {data.get('story', '').replace('\n', '<br>')}
+                    {story_text}
                 </div>
 
                 {price_html}
