@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean UI - HTML Reskinner</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/eclipse.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/htmlmixed/htmlmixed.min.js"></script>
+
+<body>
+
+    <div class="editor-panel">
+        <div class="editor-header">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                    d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+            <span>HTML Input</span>
+
+            <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                <button id="toggleThemeBtn" title="Toggle Light/Dark Mode"
+                    style="background: rgba(255, 255, 255, 0.2); border: none; cursor: pointer; color: #ffffff; padding: 8px; border-radius: 6px; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
+                    <!-- Sun Icon (for Dark Mode) -->
+                    <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <!-- Moon Icon (for Light Mode, hidden by default) -->
+                    <svg id="themeIconMoon" style="display: none;" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                        viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                    </svg>
+                </button>
+
+                <button id="toggleHistoryBtn" title="View History"
+                    style="background: rgba(255, 255, 255, 0.2); border: none; cursor: pointer; color: #ffffff; padding: 8px; border-radius: 6px; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+
+                <button id="toggleApiKey"
+                    style="background: rgba(255, 255, 255, 0.2); border: none; cursor: pointer; color: #ffffff; padding: 8px 12px; border-radius: 6px; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px; font-size: 13px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                            d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z" />
+                    </svg>
+                    <span id="apiKeyCount">0 API Keys</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- API Key Modal -->
+        <div id="apiKeyModal"
+            style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(4px);">
+            <div
+                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 500px; max-width: 90%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #2d3748;">🔑 Gemini API Keys</h3>
+                    <button id="closeModal"
+                        style="background: none; border: none; font-size: 24px; cursor: pointer; color: #a0aec0; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.2s;">×</button>
+                </div>
+                <p style="margin: 0 0 16px 0; font-size: 13px; color: #718096;">Masukkan API keys Anda (satu per baris).
+                    Sistem akan otomatis rotasi jika ada error.</p>
+                <textarea id="apiKeyInput"
+                    placeholder="AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&#10;AIzaSyYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY&#10;AIzaSyZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
+                    style="width: 100%; box-sizing: border-box; height: 150px; padding: 12px; border: 3px solid #cbd5e0; border-radius: 8px; font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.6; resize: vertical; outline: none; transition: all 0.3s; background: #f7fafc; color: #2d3748;"></textarea>
+                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button id="saveApiKeys"
+                        style="flex: 1; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">Simpan</button>
+                    <button id="clearApiKeys"
+                        style="background: #fed7d7; color: #c53030; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">Hapus
+                        Semua</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Panel (Sidebar) -->
+        <div id="historyPanel"
+            style="position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #1a202c; box-shadow: -4px 0 20px rgba(0,0,0,0.3); z-index: 999; transition: right 0.3s ease; overflow-y: auto;">
+            <div style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #ffffff;">📜 History</h3>
+                    <button id="closeHistoryBtn"
+                        style="background: transparent; border: none; color: #ffffff; cursor: pointer; font-size: 24px; padding: 0; line-height: 1;">&times;</button>
+                </div>
+                <p style="margin: 0; font-size: 12px; color: #a0aec0;">Last 5 generations</p>
+            </div>
+
+            <div id="historyList" style="padding: 15px;">
+                <!-- History items will be inserted here by JavaScript -->
+                <div style="text-align: center; padding: 40px 20px; color: #718096;">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        style="width: 48px; height: 48px; margin: 0 auto 15px; opacity: 0.5;" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p style="margin: 0; font-size: 14px;">No history yet</p>
+                    <p style="margin: 5px 0 0; font-size: 12px; opacity: 0.7;">Generate a design to start</p>
+                </div>
+            </div>
+
+            <div style="padding: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <button id="clearHistoryBtn"
+                    style="width: 100%; background: #fc8181; color: #ffffff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    Clear All History
+                </button>
+            </div>
+        </div>
+
+        <textarea id="inputPasteCode" class="code-textarea" placeholder="<!DOCTYPE html>
+<html>
+<head>
+  <title>Web Lama</title>
+</head>
+<body>
+  <h1>Judul Biasa Saja</h1>
+  <p>Contoh paragraf yang belum didesain.</p>
+  <button>Klik Saya</button>
+</body>
+</html>"></textarea>
+
+        <div class="theme-toolbar">
+            <!-- Card 1: Style & Options (Merged) -->
+            <div class="option-card mb-4">
+                <div class="card-header cursor-pointer" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="card-icon">🎨</span>
+                        <h3 class="card-title">Style & Options</h3>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-400 transform transition-transform duration-200 chevron-icon"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <div class="card-body">
+                    <!-- Style Selection -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Style Desain</label>
+                        <div class="relative">
+                            <select id="styleSelect"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3 appearance-none">
+                                <option value="reference_style">🔗 Follow Reference Link (Tiru Link)</option>
+                                <option value="pink_curhat">🎀 Pink Curhat (Feminine & Friendly)</option>
+                                <option value="minimalist_clean">✨ Minimalist Clean (Professional)</option>
+                                <option value="bold_dark">🔥 Bold Dark (High Impact)</option>
+                                <option value="luxury_elegant">💎 Luxury Elegant (Premium & Exclusive)</option>
+                                <option value="eco_natural">🌿 Eco Natural (Organic & Fresh)</option>
+                                <option value="tech_modern">🚀 Tech Modern (SaaS & Futuristic)</option>
+                                <option value="high_energy">⚡ High Energy (Urgent & Salesy)</option>
+                                <option value="ebook_bestseller">📚 Ebook Best Seller (Professional & Authoritative)
+                                </option>
+                                <option value="custom">🎨 Custom Style (Tulis Sendiri)</option>
+                            </select>
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Style Input (Hidden by default) -->
+                    <div id="customStyleContainer" class="mb-4 hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Style Custom</label>
+                        <textarea id="customStylePrompt" rows="3"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3"
+                            placeholder="Contoh: Cyberpunk neon green, background hitam, font futuristik..."></textarea>
+                    </div>
+
+                    <!-- Reference URL Input -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            🔗 Link Referensi Desain
+                            <span class="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded ml-2">New!</span>
+                        </label>
+                        <input type="url" id="referenceUrl"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3"
+                            placeholder="https://website-keren.com">
+                        <p class="text-xs text-gray-500 mt-1">AI akan meniru gaya visual dari link ini.</p>
+                    </div>
+
+                    <!-- Rewrite Copywriting Checkbox -->
+                    <label
+                        class="flex items-center cursor-pointer bg-purple-50 border border-purple-200 rounded-lg px-3 py-2 hover:bg-purple-100 transition">
+                        <input type="checkbox" id="rewriteCopywriting"
+                            class="mr-2 w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500">
+                        <span class="text-xs font-medium text-purple-800 whitespace-nowrap">✍️ Tulis Ulang Teks</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Card 2: Actions -->
+            <div class="option-card option-card-actions">
+                <div class="card-body" style="padding-top: 20px;">
+                    <div class="flex flex-wrap gap-2">
+                        <button id="checkHtmlBtn"
+                            class="flex-1 min-w-[120px] bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Check HTML
+                        </button>
+
+                        <button id="copyHtmlBtn"
+                            class="flex-1 min-w-[120px] bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 flex items-center justify-center hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                                <path
+                                    d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                            </svg>
+                            Copy HTML
+                        </button>
+
+                        <button id="generateBtn"
+                            class="flex-[2] min-w-[200px] bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200 flex items-center justify-center shadow-lg transform hover:scale-105">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Generate Landing Page
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progressContainer" class="w-full bg-gray-200 rounded-full h-4 mt-4 hidden overflow-hidden relative">
+            <div id="progressBar"
+                class="bg-gradient-to-r from-blue-500 to-purple-600 h-4 rounded-full transition-all duration-300"
+                style="width: 0%"></div>
+            <div id="progressText"
+                class="absolute top-0 left-0 w-full h-full flex items-center justify-center text-[10px] font-bold text-white drop-shadow-md">
+                0%</div>
+        </div>
+        <div id="loadingStatus" class="text-center text-sm text-gray-600 mt-2 hidden font-medium animate-pulse">
+            Sedang meracik landing page impianmu... 🚀
+        </div>
+    </div>
+
+    <!-- Right Panel (Centered Preview) -->
+    <div class="flex-1 flex justify-center items-center h-full p-8">
+        <div id="previewContainer" class="bg-white rounded-[2rem] shadow-2xl p-6 flex flex-col border border-gray-200"
+            style="height: 85vh; width: 450px;">
+            <div class="flex justify-between items-center mb-4 px-2">
+                <h2 class="text-lg font-bold text-gray-800">Live Preview</h2>
+                <div class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Mobile View (375px)
+                </div>
+            </div>
+            <div id="preview-body"
+                class="flex-1 flex justify-center items-center bg-gray-50 rounded-[2rem] overflow-hidden border border-gray-100 relative">
+                <iframe id="previewFrame" class="bg-white shadow-xl rounded-[35px] border-[8px] border-gray-800"
+                    style="width: 375px; height: 95%;" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
